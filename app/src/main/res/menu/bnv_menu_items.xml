@@ -5,6 +5,10 @@
         android:icon="@drawable/icon_cookbook"
         android:title="Recipes"/>
     <item
+        android:id="@+id/favPage"
+        android:icon="@drawable/icon_favourites"
+        android:title="Favourites"/>
+    <item
         android:id="@+id/profilePage"
         android:icon="@drawable/icon_user"
         android:title="Profile"/>

@@ -18,6 +18,8 @@ public class bnmAdapter extends FragmentStateAdapter {
             case 0:
                 return new RecipePageFragment();
             case 1:
+                return new FavouritesPageFragment();
+            case 2:
                 return new ProfilePageFragment();
             default:
                 return new RecipePageFragment();
@@ -26,6 +28,6 @@ public class bnmAdapter extends FragmentStateAdapter {
 
     @Override
     public int getItemCount() {
-        return 2;
+        return 3;
     }
 }

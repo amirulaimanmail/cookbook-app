@@ -24,11 +24,11 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 
-public class RecipePageFragment extends Fragment implements FavouriteHandler{
+public class FavouritesPageFragment extends Fragment implements FavouriteHandler{
 
     private RecyclerView recyclerView;
     private RecipeListAdapter recipeListAdapter;
-    private ArrayList<RecipeListItem> recipeListItems;
+    private ArrayList<RecipeListItem> favouriteItems;
     private SharedPreferences sharedPreferences;
 
     @Nullable
@@ -43,8 +43,8 @@ public class RecipePageFragment extends Fragment implements FavouriteHandler{
         sharedPreferences = getActivity().getSharedPreferences("recipe_prefs", Context.MODE_PRIVATE);
 
         //add items here
-        recipeListItems = new ArrayList<>();
-        recipeListAdapter = new RecipeListAdapter(getContext(), recipeListItems, this);
+        favouriteItems = new ArrayList<>();
+        recipeListAdapter = new RecipeListAdapter(getContext(), favouriteItems, this);
         recyclerView.setAdapter(recipeListAdapter);
 
         refreshData();
@@ -59,14 +59,16 @@ public class RecipePageFragment extends Fragment implements FavouriteHandler{
         editor.putBoolean(id, isFavourite);
         editor.apply();
 
-        for (RecipeListItem item : recipeListItems) {
+        for (RecipeListItem item : favouriteItems) {
             if (item.getId().equals(id)) {
-                item.setFavourite(isFavourite);
+                if (!isFavourite) {
+                    favouriteItems.remove(item);
+                }
                 break;
             }
         }
+        favouriteItems.sort((item1, item2) -> Boolean.compare(item2.isFavourite(), item1.isFavourite()));
 
-        recipeListItems.sort((item1, item2) -> Boolean.compare(item2.isFavourite(), item1.isFavourite()));
         recipeListAdapter.notifyDataSetChanged();
     }
 
@@ -74,7 +76,7 @@ public class RecipePageFragment extends Fragment implements FavouriteHandler{
         new FetchRecipeList().execute("https://www.themealdb.com/api/json/v1/1/filter.php?a=Malaysian");
     }
 
-    private class FetchRecipeList extends AsyncTask<String, Void, ArrayList<RecipeListItem>>{
+    private class FetchRecipeList extends AsyncTask<String, Void, ArrayList<RecipeListItem>> {
 
         @Override
         protected ArrayList<RecipeListItem> doInBackground(String... urls) {
@@ -111,7 +113,9 @@ public class RecipePageFragment extends Fragment implements FavouriteHandler{
                         item.setFavourite(sharedPreferences.getBoolean(item.getId(), false));
                         Log.d("TAG2", "Set favourite for " + item.getName() + " " + item.getId() + " " + item.isFavourite());
 
-                        recipeListItems.add(item);
+                        if(item.isFavourite()){
+                            recipeListItems.add(item);
+                        }
                     }
                     Log.d("TAG", "Adding complete");
                 } else {
@@ -131,10 +135,10 @@ public class RecipePageFragment extends Fragment implements FavouriteHandler{
 
             if (items != null && !items.isEmpty()) {
                 Log.d("TAG", "List output");
-                recipeListItems.clear();
-                recipeListItems.addAll(items);
+                favouriteItems.clear();
+                favouriteItems.addAll(items);
 
-                recipeListItems.sort((item1, item2) -> Boolean.compare(item2.isFavourite(), item1.isFavourite()));
+                favouriteItems.sort((item1, item2) -> Boolean.compare(item2.isFavourite(), item1.isFavourite()));
 
                 recipeListAdapter.notifyDataSetChanged();
             }
