@@ -29,7 +29,7 @@ import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class SubmitActivity extends AppCompatActivity {
+public class EditProfileActivity extends AppCompatActivity {
 
     private static final int PERMISSION_REQUEST_CODE = 100;
 
@@ -46,7 +46,7 @@ public class SubmitActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.actv_updateprofile);
+        setContentView(R.layout.actv_editprofile);
 
         camButton = findViewById(R.id.button_update);
         imageView = findViewById(R.id.imageView);
@@ -80,7 +80,7 @@ public class SubmitActivity extends AppCompatActivity {
             }
 
             if (photoUri == null) {
-                Toast.makeText(SubmitActivity.this, "Please capture or select a photo", Toast.LENGTH_SHORT).show();
+                Toast.makeText(EditProfileActivity.this, "Please capture or select a photo", Toast.LENGTH_SHORT).show();
                 return;  // Prevent proceeding if the photo is not selected
             }
 
@@ -312,7 +312,7 @@ public class SubmitActivity extends AppCompatActivity {
                 photoFile = createImageFile();
             } catch (IOException e) {
                 e.printStackTrace();
-                Toast.makeText(SubmitActivity.this, "Error creating image file", Toast.LENGTH_SHORT).show();
+                Toast.makeText(EditProfileActivity.this, "Error creating image file", Toast.LENGTH_SHORT).show();
             }
 
             if (photoFile != null) {
